@@ -1,0 +1,95 @@
+---
+title: "House_Pricing_Prediction"
+author: "Pranjal Vijay"
+date: "January 17, 2018"
+output: html_document
+---
+```{r}
+library(caret)
+library(ggplot2)
+library(dplyr)
+library(randomForest)
+```
+```{r}
+getwd()
+```
+
+```{r}
+Training_Data<-read.csv("C:/Users/ddddd/Nomad2018 Predicting/train.csv", stringsAsFactors = F)
+Test_Data<-read.csv("C:/Users/ddddd/Nomad2018 Predicting/test.csv", stringsAsFactors = F)
+```
+```{r}
+sapply(Training_Data, function(x) {sum(is.na(x))})
+```
+
+```{r}
+sapply(Test_Data, function(x) {sum(is.na(x))})
+```
+
+
+
+
+
+
+
+```{r}
+dim(Training_Data)
+
+
+```
+```{r}
+dim(Test_Data)
+
+
+```
+
+```{r}
+qplot(id, bandgap_energy_ev,data=Training_Data)
+```
+
+```{r}
+qplot(id, formation_energy_ev_natom,data=Training_Data)
+```
+
+
+```{r}
+bandgap_energy_Model <- randomForest(
+ bandgap_energy_ev ~   id +spacegroup+number_of_total_atoms+percent_atom_al +           percent_atom_ga+percent_atom_in+lattice_vector_1_ang+lattice_vector_2_ang +      lattice_vector_3_ang+lattice_angle_alpha_degree + lattice_angle_beta_degree+ lattice_angle_gamma_degree    ,data=Training_Data,method="rf")
+bandgap_energy_Model
+```
+```{r}
+formation_energy_Model <- randomForest(
+ formation_energy_ev_natom ~   id +spacegroup+number_of_total_atoms+percent_atom_al +           percent_atom_ga+percent_atom_in+lattice_vector_1_ang+lattice_vector_2_ang +      lattice_vector_3_ang+lattice_angle_alpha_degree + lattice_angle_beta_degree+ lattice_angle_gamma_degree    ,data=Training_Data,method="rf")
+formation_energy_Model
+```
+
+```{r}
+plot(bandgap_energy_Model)
+```
+```{r}
+plot(formation_energy_Model)
+```
+
+
+
+```{r}
+formation_Prediction <- predict(formation_energy_Model,Test_Data)
+formation_Prediction
+
+```
+```{r}
+bandgap_energy_Model <- predict(bandgap_energy_Model,Test_Data)
+bandgap_energy_Model
+
+```
+```{r}
+# Data for submission
+Predicted_Outcome <- data.frame(id = 1:600, formation_energy_ev_natom = formation_Prediction, bandgap_energy_ev = bandgap_energy_Model)
+colnames(Predicted_Outcome) <- c("id","formation_energy_ev_natom","bandgap_energy_ev")
+write.csv(Predicted_Outcome,"Predicted_Outcome.csv",row.names = FALSE)
+
+```
+
+
+
+
