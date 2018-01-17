@@ -1,9 +1,10 @@
 ---
-title: "House_Pricing_Prediction"
+title: "Nomad2018 Predicting Transparent Conductors"
 author: "Pranjal Vijay"
 date: "January 17, 2018"
 output: html_document
 ---
+
 ```{r}
 library(caret)
 library(ggplot2)
